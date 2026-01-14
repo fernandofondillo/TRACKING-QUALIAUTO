@@ -2,13 +2,20 @@ import React from 'react';
 import { Header } from "@/components/Header";
 import { getLeads, getUserProfile } from "@/lib/actions";
 import { CreateLeadButton } from "@/components/CreateLeadButton";
+import { LeadsFilter } from "@/components/LeadsFilter";
+import { Lead } from "@/types/database";
 
-export default async function LeadsPage() {
+export default async function LeadsPage({
+    searchParams,
+}: {
+    searchParams: Promise<{ search?: string; status?: string }>;
+}) {
+    const { search, status } = await searchParams;
     const [{ data: leadsData }, { data: profile }] = await Promise.all([
-        getLeads(),
+        getLeads({ search, status }),
         getUserProfile()
     ]);
-    const leads = leadsData || [];
+    const leads = (leadsData || []) as Lead[];
 
     return (
         <>
@@ -24,20 +31,7 @@ export default async function LeadsPage() {
                 </div>
 
                 <div className="bg-card border border-border rounded-2xl p-6 glass-morphism">
-                    <div className="flex items-center justify-between mb-6">
-                        <div className="flex gap-4">
-                            <input
-                                type="text"
-                                placeholder="Filtrar por nombre o vehículo..."
-                                className="bg-muted border-none rounded-lg py-2 px-4 text-sm focus:ring-1 focus:ring-primary w-80"
-                            />
-                            <select className="bg-muted border-none rounded-lg py-2 px-4 text-sm focus:ring-1 focus:ring-primary">
-                                <option>Todos los estados</option>
-                                <option>Nuevo</option>
-                                <option>Contactado</option>
-                            </select>
-                        </div>
-                    </div>
+                    <LeadsFilter />
 
                     <div className="overflow-x-auto">
                         <table className="w-full text-left">

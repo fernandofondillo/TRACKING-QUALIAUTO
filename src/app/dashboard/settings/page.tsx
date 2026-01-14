@@ -1,11 +1,17 @@
 import React from 'react';
 import { Header } from "@/components/Header";
 import { User, Shield, Bell } from 'lucide-react';
+import { getUserProfile } from '@/lib/actions';
+import { ProfileForm } from '@/components/ProfileForm';
 
-export default function SettingsPage() {
+export default async function SettingsPage() {
+    const { data: profile } = await getUserProfile();
+
+    if (!profile) return null;
+
     return (
         <>
-            <Header title="Configuración" userName="Fernando Rueda" />
+            <Header title="Configuración" userName={profile.nombre || 'Usuario'} />
 
             <div className="p-8 max-w-7xl mx-auto">
                 <div className="flex items-center justify-between mb-8">
@@ -34,27 +40,7 @@ export default function SettingsPage() {
                     <div className="col-span-2">
                         <div className="bg-card border border-border rounded-2xl p-8 glass-morphism">
                             <h3 className="text-lg font-semibold mb-6">Información Personal</h3>
-                            <div className="space-y-6">
-                                <div className="grid grid-cols-2 gap-6">
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-medium text-muted-foreground">Nombre Completo</label>
-                                        <input type="text" defaultValue="Fernando Rueda" className="w-full bg-muted border-none rounded-xl py-3 px-4 focus:ring-1 focus:ring-primary" />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-medium text-muted-foreground">Email</label>
-                                        <input type="email" defaultValue="fernando@example.com" className="w-full bg-muted border-none rounded-xl py-3 px-4 focus:ring-1 focus:ring-primary" />
-                                    </div>
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm font-medium text-muted-foreground">Cargo</label>
-                                    <input type="text" defaultValue="Gerente General" className="w-full bg-muted border-none rounded-xl py-3 px-4 focus:ring-1 focus:ring-primary" />
-                                </div>
-                                <div className="pt-4">
-                                    <button className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2 rounded-xl font-medium transition-all">
-                                        Guardar Cambios
-                                    </button>
-                                </div>
-                            </div>
+                            <ProfileForm profile={profile} />
                         </div>
                     </div>
                 </div>

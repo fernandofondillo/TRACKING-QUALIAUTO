@@ -1,15 +1,38 @@
+import { cache } from 'react';
 import { createClient } from '@/utils/supabase/server';
 import { LeadFase, Lead, Profile } from '@/types/database';
 
-export const getLeads = async (userId?: string) => {
+export const getUserProfile = cache(async () => {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return { data: null, error: 'No user' };
+
+    const { data: profile, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+
+    return { data: profile as Profile | null, error };
+});
+
+export const getLeads = async (filters?: { userId?: string; search?: string; status?: string }) => {
     const supabase = await createClient();
     let query = supabase
         .from('leads')
         .select('*')
         .order('created_at', { ascending: false });
 
-    if (userId) {
-        query = query.eq('vendedor_asignado', userId);
+    if (filters?.userId) {
+        query = query.eq('vendedor_asignado', filters.userId);
+    }
+
+    if (filters?.status && filters.status !== 'Todos los estados') {
+        query = query.eq('fase', filters.status);
+    }
+
+    if (filters?.search) {
+        query = query.or(`nombre_cliente.ilike.%${filters.search}%,vehiculo_interes.ilike.%${filters.search}%`);
     }
 
     const { data, error } = await query;
@@ -116,17 +139,17 @@ export const createLead = async (leadData: Partial<Lead>) => {
 
     return { data, error };
 };
-
-export const getUserProfile = async () => {
+export const updateProfile = async (profileData: Partial<Profile>) => {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return { data: null, error: 'No user' };
 
-    const { data: profile, error } = await supabase
+    const { data, error } = await supabase
         .from('profiles')
-        .select('*')
+        .update(profileData)
         .eq('id', user.id)
+        .select()
         .single();
 
-    return { data: profile as Profile | null, error };
+    return { data, error };
 };
