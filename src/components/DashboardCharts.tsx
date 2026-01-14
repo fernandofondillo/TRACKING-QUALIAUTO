@@ -6,25 +6,16 @@ import {
     PieChart, Pie, Cell, Legend
 } from 'recharts';
 
-const vendorData = [
-    { name: 'Carlos R.', sales: 12 },
-    { name: 'Elena M.', sales: 15 },
-    { name: 'Marcos T.', sales: 9 },
-    { name: 'Julia S.', sales: 18 },
-    { name: 'David L.', sales: 11 },
-];
+export type ChartData = {
+    vendorData: { name: string; sales: number }[];
+    channelData: { name: string; value: number }[];
+};
 
-const channelData = [
-    { name: 'Coches.net', value: 45 },
-    { name: 'WhatsApp', value: 25 },
-    { name: 'Llamada', value: 15 },
-    { name: 'Exposición', value: 10 },
-    { name: 'Otros', value: 5 },
-];
+export function DashboardCharts({ data }: { data?: ChartData }) {
+    const vendorData = data?.vendorData || [];
+    const channelData = data?.channelData || [];
+    const COLORS = ['#3B82F6', '#10B981', '#6366F1', '#8B5CF6', '#EC4899'];
 
-const COLORS = ['#3B82F6', '#10B981', '#6366F1', '#8B5CF6', '#EC4899'];
-
-export function DashboardCharts() {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
             {/* Sales by Vendor */}

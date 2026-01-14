@@ -18,17 +18,24 @@ export function CardContent({ children, className }: { children: React.ReactNode
 
 import { TrendingUp, Users, Target, CheckCircle } from 'lucide-react';
 
-const stats = [
-    { title: "Total Leads", value: "1,284", icon: Users, trend: "+12.5%", color: "text-blue-500" },
-    { title: "Ventas Mes", value: "48", icon: TrendingUp, trend: "+8.2%", color: "text-green-500" },
-    { title: "Tasa Conversión", value: "3.7%", icon: Target, trend: "-2.1%", color: "text-primary" },
-    { title: "Leads Activos", value: "156", icon: CheckCircle, trend: "+1.4%", color: "text-purple-500" },
-];
+export type DashboardStats = {
+    totalLeads: number | string;
+    ventasMes: number | string;
+    conversion: string;
+    activeLeads: number | string;
+};
 
-export function StatsCards() {
+export function StatsCards({ stats }: { stats?: DashboardStats }) {
+    const displayStats = [
+        { title: "Total Leads", value: stats?.totalLeads ?? "...", icon: Users, trend: "+12.5%", color: "text-blue-500" },
+        { title: "Ventas Mes", value: stats?.ventasMes ?? "...", icon: TrendingUp, trend: "+8.2%", color: "text-green-500" },
+        { title: "Tasa Conversión", value: stats?.conversion ?? "...", icon: Target, trend: "-2.1%", color: "text-primary" },
+        { title: "Leads Activos", value: stats?.activeLeads ?? "...", icon: CheckCircle, trend: "+1.4%", color: "text-purple-500" },
+    ];
+
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {stats.map((stat, i) => (
+            {displayStats.map((stat, i) => (
                 <div key={i} className="bg-card border border-border p-6 rounded-2xl glass-morphism">
                     <div className="flex items-center justify-between mb-4">
                         <div className={`p-3 rounded-xl bg-background border border-border ${stat.color}`}>

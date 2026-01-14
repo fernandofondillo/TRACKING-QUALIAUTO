@@ -1,44 +1,40 @@
 import React from 'react';
 import { Header } from "@/components/Header";
-import { StatsCards } from "@/components/StatsCards";
-import { DashboardCharts } from "@/components/DashboardCharts";
-import { getLeads, getStats, getChartData, getUserProfile } from "@/lib/actions";
+import { getLeads, getUserProfile } from "@/lib/actions";
 import { CreateLeadButton } from "@/components/CreateLeadButton";
 
-export default async function AdminDashboard() {
-    const [{ data: leadsData }, { data: statsData }, { data: chartData }, { data: profile }] = await Promise.all([
+export default async function LeadsPage() {
+    const [{ data: leadsData }, { data: profile }] = await Promise.all([
         getLeads(),
-        getStats(),
-        getChartData(),
         getUserProfile()
     ]);
-
-    const leads = (leadsData || []).slice(0, 5); // Show latest 5
+    const leads = leadsData || [];
 
     return (
         <>
-            <Header title="Panel de Gestión Global" userName={profile?.nombre || 'Administrador'} />
+            <Header title="Gestión de Leads" userName={profile?.nombre || 'Usuario'} />
 
             <div className="p-8 max-w-7xl mx-auto">
                 <div className="flex items-center justify-between mb-8">
                     <div>
-                        <h2 className="text-2xl font-bold tracking-tight">Bienvenido de nuevo</h2>
-                        <p className="text-muted-foreground mt-1">Aquí tienes el resumen de la actividad de hoy en QualiAuto.</p>
+                        <h2 className="text-2xl font-bold tracking-tight">Leads en seguimiento</h2>
+                        <p className="text-muted-foreground mt-1">Gestiona y actualiza el estado de tus clientes potenciales.</p>
                     </div>
                     <CreateLeadButton />
                 </div>
 
-                <StatsCards stats={statsData || undefined} />
-                <DashboardCharts data={chartData || undefined} />
-
-                <div className="mt-8 bg-card border border-border rounded-2xl p-6 glass-morphism">
+                <div className="bg-card border border-border rounded-2xl p-6 glass-morphism">
                     <div className="flex items-center justify-between mb-6">
-                        <h3 className="text-lg font-semibold">Live Feed: Últimos Leads</h3>
-                        <div className="flex gap-2">
-                            <select className="bg-muted border-none rounded-lg py-1 px-3 text-sm focus:ring-1 focus:ring-primary">
-                                <option>Todos los canales</option>
-                                <option>WhatsApp</option>
-                                <option>Coches.net</option>
+                        <div className="flex gap-4">
+                            <input
+                                type="text"
+                                placeholder="Filtrar por nombre o vehículo..."
+                                className="bg-muted border-none rounded-lg py-2 px-4 text-sm focus:ring-1 focus:ring-primary w-80"
+                            />
+                            <select className="bg-muted border-none rounded-lg py-2 px-4 text-sm focus:ring-1 focus:ring-primary">
+                                <option>Todos los estados</option>
+                                <option>Nuevo</option>
+                                <option>Contactado</option>
                             </select>
                         </div>
                     </div>
@@ -70,13 +66,13 @@ export default async function AdminDashboard() {
                                             {new Date(lead.created_at).toLocaleDateString()}
                                         </td>
                                         <td className="py-4 text-right">
-                                            <button className="text-primary hover:underline font-medium">Ver detalle</button>
+                                            <button className="text-primary hover:underline font-medium">Gestionar</button>
                                         </td>
                                     </tr>
                                 )) : (
                                     <tr>
                                         <td colSpan={6} className="py-8 text-center text-muted-foreground italic">
-                                            No hay leads registrados aún.
+                                            No se encontraron leads.
                                         </td>
                                     </tr>
                                 )}

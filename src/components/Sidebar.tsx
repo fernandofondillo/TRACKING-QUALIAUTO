@@ -1,6 +1,10 @@
+"use client";
+
 import React from 'react';
 import Link from 'next/link';
 import { LayoutDashboard, Users, Car, Settings, LogOut, ChevronRight } from 'lucide-react';
+import { logout } from '@/lib/auth-actions';
+import { Profile } from '@/types/database';
 
 const navItems = [
     { name: 'Dashboard', icon: LayoutDashboard, href: '/dashboard' },
@@ -9,7 +13,9 @@ const navItems = [
     { name: 'Configuración', icon: Settings, href: '/dashboard/settings' },
 ];
 
-export function Sidebar({ role }: { role: 'gerente' | 'vendedor' }) {
+export function Sidebar({ profile }: { profile: Profile }) {
+    const role = profile.role;
+
     return (
         <aside className="w-64 bg-card border-r border-border flex flex-col h-screen fixed">
             <div className="p-6">
@@ -18,6 +24,12 @@ export function Sidebar({ role }: { role: 'gerente' | 'vendedor' }) {
                         <Car className="text-primary-foreground w-5 h-5" />
                     </div>
                     <span className="font-bold text-xl tracking-tight uppercase">QualiAuto</span>
+                </div>
+
+                <div className="mb-8 p-4 bg-muted/50 rounded-2xl border border-border/50">
+                    <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-1">Usuario</p>
+                    <p className="text-sm font-bold truncate">{profile.nombre || profile.email}</p>
+                    <p className="text-[10px] uppercase font-black text-primary tracking-tighter mt-0.5">{role}</p>
                 </div>
 
                 <nav className="space-y-2">
@@ -38,9 +50,14 @@ export function Sidebar({ role }: { role: 'gerente' | 'vendedor' }) {
             </div>
 
             <div className="mt-auto p-6">
-                <button className="flex items-center gap-3 text-destructive hover:text-red-400 transition-colors w-full p-3">
-                    <LogOut className="w-5 h-5" />
-                    <span className="text-sm font-medium">Cerrar Sesión</span>
+                <button
+                    onClick={() => logout()}
+                    className="flex items-center gap-3 text-destructive hover:text-red-400 transition-colors w-full p-3 group"
+                >
+                    <div className="w-10 h-10 rounded-xl bg-destructive/10 flex items-center justify-center group-hover:bg-destructive/20 transition-colors">
+                        <LogOut className="w-5 h-5" />
+                    </div>
+                    <span className="text-sm font-bold">Cerrar Sesión</span>
                 </button>
             </div>
         </aside>

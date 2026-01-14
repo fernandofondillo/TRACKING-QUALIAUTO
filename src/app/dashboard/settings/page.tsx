@@ -1,0 +1,64 @@
+import React from 'react';
+import { Header } from "@/components/Header";
+import { User, Shield, Bell } from 'lucide-react';
+
+export default function SettingsPage() {
+    return (
+        <>
+            <Header title="Configuración" userName="Fernando Rueda" />
+
+            <div className="p-8 max-w-7xl mx-auto">
+                <div className="flex items-center justify-between mb-8">
+                    <div>
+                        <h2 className="text-2xl font-bold tracking-tight">Ajustes del Sistema</h2>
+                        <p className="text-muted-foreground mt-1">Configura tu perfil y las preferencias de la aplicación.</p>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="col-span-1 space-y-4">
+                        <button className="flex items-center gap-3 w-full p-4 rounded-2xl bg-primary text-primary-foreground font-medium shadow-lg shadow-primary/20">
+                            <User className="w-5 h-5" />
+                            Perfil de Usuario
+                        </button>
+                        <button className="flex items-center gap-3 w-full p-4 rounded-2xl bg-card border border-border text-muted-foreground hover:text-foreground transition-colors">
+                            <Shield className="w-5 h-5" />
+                            Seguridad
+                        </button>
+                        <button className="flex items-center gap-3 w-full p-4 rounded-2xl bg-card border border-border text-muted-foreground hover:text-foreground transition-colors">
+                            <Bell className="w-5 h-5" />
+                            Notificaciones
+                        </button>
+                    </div>
+
+                    <div className="col-span-2">
+                        <div className="bg-card border border-border rounded-2xl p-8 glass-morphism">
+                            <h3 className="text-lg font-semibold mb-6">Información Personal</h3>
+                            <div className="space-y-6">
+                                <div className="grid grid-cols-2 gap-6">
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium text-muted-foreground">Nombre Completo</label>
+                                        <input type="text" defaultValue="Fernando Rueda" className="w-full bg-muted border-none rounded-xl py-3 px-4 focus:ring-1 focus:ring-primary" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium text-muted-foreground">Email</label>
+                                        <input type="email" defaultValue="fernando@example.com" className="w-full bg-muted border-none rounded-xl py-3 px-4 focus:ring-1 focus:ring-primary" />
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-muted-foreground">Cargo</label>
+                                    <input type="text" defaultValue="Gerente General" className="w-full bg-muted border-none rounded-xl py-3 px-4 focus:ring-1 focus:ring-primary" />
+                                </div>
+                                <div className="pt-4">
+                                    <button className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2 rounded-xl font-medium transition-all">
+                                        Guardar Cambios
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
+    );
+}
